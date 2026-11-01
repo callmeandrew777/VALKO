@@ -1,13 +1,13 @@
-#VALKO
+# VALKO
 
-It's a workout app for many sport such as gym, running, trekking.
+It's a workout app for many sports such as gym, running, trekking.
 For the moment I'm starting just with gym functions, because it's familiar to me.
 
-##Features
+## Features
 
 - Training Journal
 - Social and Progression
-- Chellenges and Discipline
+- Challenges and Discipline
 - Personal Profile
 - Focus and Knowledge
 - AI Training Assistant
