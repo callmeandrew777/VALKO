@@ -1,15 +1,57 @@
-user_workouts = []
+import json
+import os
+
+DATABASE_FILE = "workouts.json"
+
+def load_workouts():
+    if not os.path.exists(DATABASE_FILE):
+        return []
+    try:
+        with open(DATABASE_FILE, "r", encoding="utf-8") as file:
+            return json.load(file)
+    except json.JSONDecodeError:
+        print("[!] Error: The database file is corrupted.")
+        return []
+
+def save_workouts(workouts):
+    with open(DATABASE_FILE, "w", encoding="utf-8") as file:
+        json.dump(workouts, file, indent=4, ensure_ascii=False)
+
+user_workouts = load_workouts()
+
+
+        
+
+def get_valid_number(prompt, field_name, num_type=int, allow_zero=False):
+    while True:
+        try:
+            value = num_type(input(prompt))
+            if allow_zero and value >= 0:
+                return value
+            if not allow_zero and value >0:
+                return value
+
+            if allow_zero:
+                print(f"[!] {field_name} cannot be negative.")
+            else:
+                print(f"[!] {field_name} must be greater than 0.")
+        except ValueError:
+            if num_type == int:
+                print("[!] Error: You must enter a whole number.")
+            else:
+                print("[!] Error: You must enter a number (use dot).")
+                      
 
 while True:
-
+    print()
     print("╔══════════════════════╗")
-    print("║[1] Add exercise    ║")
-    print("║══════════════════════╣")
-    print("║[2] Show workout    ║")
+    print("║[1] Add exercise      ║")
     print("╠══════════════════════╣")
-    print("║[3] Delete workout  ║")
+    print("║[2] Show workout      ║")
+    print("╠══════════════════════╣")
+    print("║[3] Delete workout    ║")
     print("╠══════════════════════╣")      
-    print("║[4] Exit            ║")
+    print("║[4] Exit              ║")
     print("╚══════════════════════╝")
     print()
     print(" Choose: [1][2][3][4] ")
@@ -19,37 +61,15 @@ while True:
 
     if user_choice == "1":
             while True:
-                name = str(input(" Exercise name: "))
+                name = (input(" Exercise name: ").strip())
                 if name: 
                     break
+
                 print("[!] Exercise name cannot be empty.")
 
-            while True:
-                try:
-                    sets = int(input(" Number of sets: "))
-                    if sets > 0:
-                        break
-                    print("[!] Number of serie must be greather than 0.")
-                except ValueError:
-                    print("[!] Error: You must enter a whole number.")
-
-            while True:
-                try: 
-                    reps = int(input(" Number of reps: "))
-                    if reps > 0:
-                        break
-                    print("[!] Number of reps must be greather than 0.")
-                except ValueError:
-                    print("[!] Error: You must enter a whole number.")
-
-            while True:
-                try:
-                    weight = float(input(" Kilograms: "))
-                    if weight >= 0:
-                        break
-                    print("[!] Weight cannot be negative.")
-                except ValueError:
-                    print("[!] Error: You must enter a number (use a dot for decimals).")
+            sets = get_valid_number(" Number of sets: ", "Number of sets", num_type=int)
+            reps = get_valid_number(" Number of reps: ", "Number of reps", num_type=int)
+            weight = get_valid_number(" Kilograms: ", "Weight", num_type=float, allow_zero=True)
 
             workout_input = {
                 "name" : name,
@@ -59,6 +79,7 @@ while True:
             }
 
             user_workouts.append(workout_input)
+            save_workouts(user_workouts)
 
             print(f"\n[+] {name} added successfully!")
         
@@ -94,14 +115,21 @@ while True:
             while True:
                 try:
                     print("[?] Which exercise do you want to delete?")
-                    choice = int(input(" Your choice: "))
+                    print('"0" to cancel')
+                    delete_choice = int(input(" Your choice: "))
 
-                    if 1 <= choice <= len(user_workouts):
-                        deleted_exercise = user_workouts.pop(choice - 1)
+                    if 1 <= delete_choice <= len(user_workouts):
+                        deleted_exercise = user_workouts.pop(delete_choice - 1)
+                        save_workouts(user_workouts)
+                        
                         print(f"\n[-] {deleted_exercise['name']} has been deleted successfully!")
                         break
+                    elif choice == 0:
+                        break
+                        
                     else:
                         print(f"[!] Invalid number. Please choose between 1 and {len(user_workouts)}.")
+                
                 except ValueError:
                     print("[!] Error: You must enter a valid whole number.")
                 
