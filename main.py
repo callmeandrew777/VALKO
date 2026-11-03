@@ -2,26 +2,31 @@ user_workouts = []
 
 while True:
 
-    print("\n")
-    print("[1] Add exercise")
-    print("[2] Show workout")
-    print("[3] Exit")
+    print("╔══════════════════════╗")
+    print("║[1] Add exercise    ║")
+    print("║══════════════════════╣")
+    print("║[2] Show workout    ║")
+    print("╠══════════════════════╣")
+    print("║[3] Delete workout  ║")
+    print("╠══════════════════════╣")      
+    print("║[4] Exit            ║")
+    print("╚══════════════════════╝")
     print()
-    print("Choose option: [1] [2] [3]")
-
-
-    user_choice = input("Your choice: ")
+    print(" Choose: [1][2][3][4] ")
+    print()
+    user_choice = input(" Your choice: ")
+  
 
     if user_choice == "1":
             while True:
-                name = str(input("Exercise name: "))
+                name = str(input(" Exercise name: "))
                 if name: 
                     break
                 print("[!] Exercise name cannot be empty.")
 
             while True:
                 try:
-                    sets = int(input("Number of sets: "))
+                    sets = int(input(" Number of sets: "))
                     if sets > 0:
                         break
                     print("[!] Number of serie must be greather than 0.")
@@ -30,7 +35,7 @@ while True:
 
             while True:
                 try: 
-                    reps = int(input("Number of reps: "))
+                    reps = int(input(" Number of reps: "))
                     if reps > 0:
                         break
                     print("[!] Number of reps must be greather than 0.")
@@ -39,7 +44,7 @@ while True:
 
             while True:
                 try:
-                    weight = float(input("Kilograms: "))
+                    weight = float(input(" Kilograms: "))
                     if weight >= 0:
                         break
                     print("[!] Weight cannot be negative.")
@@ -66,22 +71,47 @@ while True:
             print("--- Your workout list ---")
             print()
             for index, exercise in enumerate(user_workouts, 1):
-                print(f"[{index}] {exercise['name']} {exercise['sets']} x {exercise['reps']} x {exercise['weight']}kg")
-                
+                volume = exercise['weight'] * exercise['sets'] * exercise['reps']
 
+                if volume.is_integer():
+                          volume = int(volume)
+              
+                print(f"[{index}] {exercise['name']} {exercise['sets']} x {exercise['reps']} x {exercise['weight']}kg - vol. [{volume}kg]")
 
     elif user_choice == "3":
+        if not user_workouts:
+            print()
+            print("[!] There are no exercises to delete.")
+            print()
+        else:
+            print("--- Delete an exercise ---")
+            print()
+
+            for index, exercise in enumerate(user_workouts, 1):
+                print(f"[{index}] {exercise['name']}")
+                print()
+        
+            while True:
+                try:
+                    print("[?] Which exercise do you want to delete?")
+                    choice = int(input(" Your choice: "))
+
+                    if 1 <= choice <= len(user_workouts):
+                        deleted_exercise = user_workouts.pop(choice - 1)
+                        print(f"\n[-] {deleted_exercise['name']} has been deleted successfully!")
+                        break
+                    else:
+                        print(f"[!] Invalid number. Please choose between 1 and {len(user_workouts)}.")
+                except ValueError:
+                    print("[!] Error: You must enter a valid whole number.")
+                
+
+    elif user_choice == "4":
         print()
-        print("Goodbye! Have a great workout!")
+        print(" Goodbye! Have a great workout!")
         break
 
     else:
         print()
         print("\n[!] Invalid choice! Please choice [1] or [2] or [3]")
-
-    
-    
-
-        
-
-    
+        print()
